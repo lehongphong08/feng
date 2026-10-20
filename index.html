@@ -177,6 +177,40 @@
     .img-credit{font-size:.65rem;color:rgba(255,255,255,.35);text-align:right;margin-top:4px}
     .img-credit a{color:rgba(255,255,255,.5);text-decoration:none}
 
+    /* ── Auto-content panel ── */
+    .panel-tabs{display:flex;gap:0;margin-bottom:20px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+    .ptab{flex:1;padding:10px;text-align:center;font-size:.8rem;font-weight:600;cursor:pointer;background:transparent;border:none;color:var(--sub);transition:all .22s;border-right:1px solid var(--border)}
+    .ptab:last-child{border-right:none}
+    .ptab:hover{background:rgba(255,255,255,.04);color:var(--text)}
+    .ptab.active{background:rgba(124,58,237,.18);color:#a78bfa}
+    .panel-body{display:none}
+    .panel-body.active{display:block}
+
+    .ctype-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:14px}
+    .ctype-btn{padding:10px 8px;border-radius:9px;border:2px solid var(--border);background:transparent;cursor:pointer;text-align:center;color:var(--sub);font-size:.75rem;font-weight:600;transition:all .22s;display:flex;flex-direction:column;align-items:center;gap:3px}
+    .ctype-btn .cicon{font-size:1.3rem}
+    .ctype-btn:hover{border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.07);color:var(--text)}
+    .ctype-btn.active{border-color:var(--a1);background:rgba(124,58,237,.14);color:#a78bfa}
+
+    .suggest-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+    .chip{padding:5px 12px;border-radius:100px;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25);color:#22d3ee;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s}
+    .chip:hover{background:rgba(6,182,212,.2);border-color:rgba(6,182,212,.5)}
+
+    .source-tag{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;padding:3px 10px;border-radius:100px;font-weight:600;margin-bottom:10px}
+    .src-wiki{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#4ade80}
+    .src-tpl{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fbbf24}
+
+    .fetch-result{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.82rem;color:var(--sub);line-height:1.6;max-height:130px;overflow-y:auto;margin-bottom:12px;display:none}
+    .fetch-result.show{display:block}
+    .fetch-result::-webkit-scrollbar{width:3px}
+    .fetch-result::-webkit-scrollbar-thumb{background:var(--a1);border-radius:100px}
+
+    .btn-ai{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;box-shadow:0 6px 20px rgba(124,58,237,.3)}
+    .btn-ai:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(124,58,237,.45)}
+    .btn-ai:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .btn-fill{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.3);color:#22d3ee;font-size:.8rem;padding:8px 14px}
+    .btn-fill:hover{background:rgba(6,182,212,.2)}
+
     @media(max-width:600px){.themes{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.ratio-tabs{flex-wrap:wrap}}
   </style>
 </head>
@@ -200,15 +234,55 @@
   <div class="grid">
     <!-- LEFT -->
     <div>
-      <!-- Script -->
+      <!-- Script + Auto-content card -->
       <div class="card">
-        <div class="ct"><div class="ci cp">✍️</div> Nội dung kịch bản</div>
-        <label>Chủ đề hoặc kịch bản đầy đủ:</label>
-        <textarea id="scriptInput" placeholder="Ví dụ:&#10;5 mẹo tiết kiệm tiền hiệu quả&#10;&#10;1. Lập ngân sách chi tiêu hàng tháng&#10;2. Hạn chế ăn ngoài, nấu ăn tại nhà&#10;3. Tắt các dịch vụ subscription không dùng&#10;4. Mua sắm theo danh sách&#10;5. Đầu tư tăng thu nhập"></textarea>
+        <div class="ct"><div class="ci cp">📝</div> Nội dung video</div>
+
+        <!-- Tabs -->
+        <div class="panel-tabs">
+          <button class="ptab active" onclick="switchTab('manual',this)">✍️ Nhập tay</button>
+          <button class="ptab" onclick="switchTab('auto',this)">🤖 Tự kiếm content</button>
+        </div>
+
+        <!-- Manual Panel -->
+        <div class="panel-body active" id="panel-manual">
+          <label>Kịch bản của bạn:</label>
+          <textarea id="scriptInput" placeholder="Ví dụ:&#10;5 mẹo tiết kiệm tiền hiệu quả&#10;&#10;1. Lập ngân sách chi tiêu hàng tháng&#10;2. Hạn chế ăn ngoài, nấu ăn tại nhà&#10;3. Tắt các dịch vụ subscription không dùng&#10;4. Mua sắm theo danh sách&#10;5. Đầu tư tăng thu nhập"></textarea>
+        </div>
+
+        <!-- Auto Panel -->
+        <div class="panel-body" id="panel-auto">
+          <label>🎯 Loại nội dung:</label>
+          <div class="ctype-grid">
+            <button class="ctype-btn active" data-ctype="tips" onclick="selectCtype(this)"><span class="cicon">💡</span>Mẹo & Tips</button>
+            <button class="ctype-btn" data-ctype="facts" onclick="selectCtype(this)"><span class="cicon">🧠</span>Sự thật thú vị</button>
+            <button class="ctype-btn" data-ctype="howto" onclick="selectCtype(this)"><span class="cicon">📖</span>Hướng dẫn</button>
+            <button class="ctype-btn" data-ctype="wiki" onclick="selectCtype(this)"><span class="cicon">🌐</span>Wikipedia</button>
+            <button class="ctype-btn" data-ctype="story" onclick="selectCtype(this)"><span class="cicon">📖</span>Câu chuyện</button>
+            <button class="ctype-btn" data-ctype="review" onclick="selectCtype(this)"><span class="cicon">⭐</span>Đánh giá</button>
+          </div>
+
+          <label>🔍 Chủ đề / từ khoá:</label>
+          <input type="text" id="autoTopic" placeholder="Ví dụ: thiền định, Elon Musk, cà phê..." />
+
+          <label>💡 Gợi ý nhanh:</label>
+          <div class="suggest-chips" id="suggestChips"></div>
+
+          <div id="fetchResult" class="fetch-result"></div>
+
+          <div style="display:flex;gap:8px;margin-bottom:14px">
+            <button class="btn btn-ai" id="autoFetchBtn" onclick="autoFetchContent()" style="flex:1">
+              <span id="fetchSpin" class="spin"></span>
+              <span id="fetchTxt">✨ Tạo nội dung tự động</span>
+            </button>
+            <button class="btn btn-fill" onclick="fillScript()" id="fillBtn" style="display:none">➕ Dùng nội dung này</button>
+          </div>
+        </div>
+
+        <!-- Common fields -->
         <label>Tiêu đề video (tuỳ chọn):</label>
         <input type="text" id="titleInput" placeholder="Để trống – tự tạo từ nội dung" />
 
-        <!-- Unsplash keyword -->
         <label>🖼️ Từ khoá ảnh nền (Unsplash):</label>
         <input type="text" id="unsplashKeyword" placeholder="Ví dụ: money, nature, city, tech..." />
 
@@ -944,6 +1018,259 @@ function showToast(msg) {
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r,ms)); }
+
+// ══════════════════════════════════════════════════════════
+// AUTO-CONTENT ENGINE
+// ══════════════════════════════════════════════════════════
+
+let currentCtype = 'tips';
+let generatedContent = '';
+
+// Suggest chips per content type
+const SUGGESTS = {
+  tips:   ['Tiết kiệm tiền','Giảm cân','Học tiếng Anh','Tăng năng suất','Ngủ ngon hơn','Giảm stress'],
+  facts:  ['Đại dương','Vũ trụ','Loài người','Động vật','Lịch sử Việt Nam','Não bộ con người'],
+  howto:  ['Pha cà phê','Thiền định','Đầu tư chứng khoán','Lập kế hoạch tài chính','Chụp ảnh đẹp'],
+  wiki:   ['Trí tuệ nhân tạo','Elon Musk','Hà Nội','Bitcoin','Khí hậu','Thế chiến II'],
+  story:  ['Khởi nghiệp từ số 0','Vượt qua thất bại','Hành trình du lịch','Câu chuyện truyền cảm hứng'],
+  review: ['iPhone mới nhất','Phim hot','Sách hay nhất năm','Tai nghe không dây','Laptop gaming'],
+};
+
+// Template generators (offline, no API needed)
+const TEMPLATES = {
+  tips: (topic) => {
+    const t = topic || 'cuộc sống';
+    return `5 mẹo ${t} hiệu quả nhất bạn nên biết
+
+1. Bắt đầu ngay hôm nay – đừng chờ thời điểm hoàn hảo. Hành động nhỏ tạo ra thói quen lớn.
+
+2. Theo dõi tiến trình của bạn mỗi ngày. Ghi chép giúp bạn nhận ra điểm mạnh và điểm cần cải thiện.
+
+3. Áp dụng quy tắc 80/20 – tập trung vào 20% nỗ lực mang lại 80% kết quả trong lĩnh vực ${t}.
+
+4. Học hỏi từ người thành công. Tìm mentor hoặc đọc sách về ${t} ít nhất 15 phút mỗi ngày.
+
+5. Kiên trì là chìa khoá. Hầu hết mọi người bỏ cuộc trước khi thấy kết quả. Hãy tiếp tục!`;
+  },
+
+  facts: (topic) => {
+    const t = topic || 'thế giới';
+    return `5 sự thật thú vị về ${t} mà bạn chưa biết
+
+1. Nghiên cứu khoa học cho thấy chỉ 10% những gì chúng ta biết về ${t} là đúng sự thật hoàn toàn.
+
+2. Nếu bạn gộp tất cả kiến thức về ${t} lại, con người chỉ mới khám phá được khoảng 5% tổng thể.
+
+3. Mỗi năm có hàng nghìn phát hiện mới về ${t} làm thay đổi hoàn toàn cách chúng ta hiểu nó.
+
+4. Những kỷ lục liên quan đến ${t} thường bị phá vỡ bởi những người không ai ngờ đến.
+
+5. Kết nối giữa ${t} và cuộc sống hàng ngày của bạn sâu sắc hơn bạn nghĩ rất nhiều.`;
+  },
+
+  howto: (topic) => {
+    const t = topic || 'kỹ năng mới';
+    return `Hướng dẫn từng bước: Cách ${t} đúng cách
+
+Bước 1: Chuẩn bị – Thu thập đủ thông tin và công cụ cần thiết trước khi bắt đầu ${t}. Đừng bỏ qua bước này!
+
+Bước 2: Lên kế hoạch – Chia nhỏ mục tiêu ${t} thành các bước nhỏ có thể thực hiện được mỗi ngày.
+
+Bước 3: Thực hành – Áp dụng ngay những gì bạn học được về ${t}. Thực hành là con đường ngắn nhất đến thành công.
+
+Bước 4: Đánh giá – Sau mỗi lần thực hiện, hỏi bản thân: Điều gì hoạt động tốt? Điều gì cần cải thiện?
+
+Bước 5: Kiên trì lặp lại – Làm đúng quy trình ${t} đủ 21 ngày để hình thành thói quen bền vững.`;
+  },
+
+  story: (topic) => {
+    const t = topic || 'người trẻ';
+    return `Câu chuyện truyền cảm hứng: ${t}
+
+Khởi đầu – Không ai sinh ra đã thành công. ${t} cũng bắt đầu từ con số không, với vô số hoài nghi từ người xung quanh.
+
+Thử thách – Trên hành trình, ${t} đối mặt với thất bại nặng nề nhất cuộc đời. Mọi thứ dường như sụp đổ chỉ sau một đêm.
+
+Bước ngoặt – Thay vì bỏ cuộc, ${t} chọn cách nhìn thất bại như một bài học. Chính khoảnh khắc tối tăm nhất lại là nền tảng vững chắc nhất.
+
+Vươn lên – Từng bước nhỏ, từng ngày trôi qua, ${t} dần xây dựng lại từ đầu với quyết tâm mạnh mẽ hơn bao giờ hết.
+
+Thành công – Hôm nay, câu chuyện của ${t} là minh chứng rằng: Ai cũng có thể vươn lên, miễn là không bao giờ ngừng cố gắng.`;
+  },
+
+  review: (topic) => {
+    const t = topic || 'sản phẩm';
+    return `Đánh giá chi tiết: ${t} có thực sự đáng mua?
+
+Thiết kế & Ngoại hình – ${t} gây ấn tượng mạnh ngay từ cái nhìn đầu tiên. Chất lượng hoàn thiện tốt, cảm giác cầm nắm chắc chắn và sang trọng.
+
+Hiệu năng – Sau 2 tuần trải nghiệm thực tế, ${t} đáp ứng xuất sắc các nhu cầu hàng ngày. Tốc độ xử lý nhanh, không bị giật lag.
+
+Điểm cộng – Giá trị tương xứng với số tiền bỏ ra. Tính năng độc đáo mà ít đối thủ nào trong tầm giá có được.
+
+Điểm trừ – Pin hơi yếu hơn mong đợi. Một số tính năng phụ cần cải thiện trong phiên bản tiếp theo.
+
+Kết luận – ${t} nhận 4.2/5 sao. Đây là lựa chọn đáng cân nhắc nếu bạn đang tìm kiếm trong phân khúc này.`;
+  },
+
+  wiki: async (topic) => {
+    // Will be filled by Wikipedia fetch
+    return null;
+  },
+};
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel-body').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+tab).classList.add('active');
+  if (tab === 'auto') renderSuggestChips();
+}
+
+function selectCtype(btn) {
+  document.querySelectorAll('.ctype-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCtype = btn.dataset.ctype;
+  renderSuggestChips();
+  // Clear previous result
+  document.getElementById('fetchResult').classList.remove('show');
+  document.getElementById('fillBtn').style.display = 'none';
+  generatedContent = '';
+}
+
+function renderSuggestChips() {
+  const chips = document.getElementById('suggestChips');
+  const list = SUGGESTS[currentCtype] || [];
+  chips.innerHTML = list.map(s =>
+    `<span class="chip" onclick="document.getElementById('autoTopic').value='${s}'">${s}</span>`
+  ).join('');
+}
+
+async function autoFetchContent() {
+  const topic = document.getElementById('autoTopic').value.trim();
+  if (!topic) { showToast('⚠️ Nhập chủ đề trước!'); return; }
+
+  // Set loading state
+  document.getElementById('autoFetchBtn').disabled = true;
+  document.getElementById('fetchSpin').classList.add('show');
+  document.getElementById('fetchTxt').textContent = 'Đang tìm nội dung...';
+  document.getElementById('fetchResult').classList.remove('show');
+  document.getElementById('fillBtn').style.display = 'none';
+
+  try {
+    if (currentCtype === 'wiki') {
+      await fetchWikipedia(topic);
+    } else {
+      // Offline template generation (instant)
+      await sleep(600); // simulate loading feel
+      const fn = TEMPLATES[currentCtype];
+      generatedContent = fn ? fn(topic) : '';
+      showGeneratedContent(generatedContent, '✨ Template');
+    }
+  } catch(e) {
+    showToast('❌ Lỗi: ' + e.message);
+  } finally {
+    document.getElementById('autoFetchBtn').disabled = false;
+    document.getElementById('fetchSpin').classList.remove('show');
+    document.getElementById('fetchTxt').textContent = '✨ Tạo nội dung tự động';
+  }
+}
+
+async function fetchWikipedia(topic) {
+  // Try Vietnamese Wikipedia first, fallback to English
+  const encodedTopic = encodeURIComponent(topic);
+  const viUrl = `https://vi.wikipedia.org/api/rest_v1/page/summary/${encodedTopic}`;
+  const enUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodedTopic}`;
+
+  let data = null;
+
+  // Try VI
+  try {
+    const r = await fetch(viUrl);
+    if (r.ok) { data = await r.json(); }
+  } catch(e) {}
+
+  // Fallback EN
+  if (!data || !data.extract) {
+    try {
+      const r = await fetch(enUrl);
+      if (r.ok) { data = await r.json(); }
+    } catch(e) {}
+  }
+
+  if (!data || !data.extract) {
+    // Last resort: Wikipedia search API
+    try {
+      const searchUrl = `https://vi.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodedTopic}&format=json&origin=*&srlimit=1`;
+      const r = await fetch(searchUrl);
+      if (r.ok) {
+        const s = await r.json();
+        if (s.query && s.query.search && s.query.search.length > 0) {
+          const title = s.query.search[0].title;
+          const r2 = await fetch(`https://vi.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
+          if (r2.ok) data = await r2.json();
+        }
+      }
+    } catch(e) {}
+  }
+
+  if (data && data.extract) {
+    // Format into slides
+    const title = data.title || topic;
+    const extract = data.extract;
+
+    // Break into sentences, group ~3 per slide
+    const sentences = extract.match(/[^.!?]+[.!?]+/g) || [extract];
+    const chunks = [];
+    for (let i = 0; i < sentences.length; i += 3) {
+      chunks.push(sentences.slice(i, i+3).join(' ').trim());
+    }
+
+    generatedContent = `${title}\n\n` + chunks.slice(0, 6).map((c, i) => `${i+1}. ${c}`).join('\n\n');
+    showGeneratedContent(generatedContent, '🌐 Wikipedia');
+
+    // Auto-set Unsplash keyword
+    if (!document.getElementById('unsplashKeyword').value) {
+      document.getElementById('unsplashKeyword').value = topic;
+    }
+  } else {
+    showToast('⚠️ Không tìm thấy kết quả cho "' + topic + '" trên Wikipedia. Thử tên khác hoặc dùng tiếng Anh.');
+  }
+}
+
+function showGeneratedContent(content, source) {
+  generatedContent = content;
+  const el = document.getElementById('fetchResult');
+  el.innerHTML = `<div class="source-tag ${source.includes('Wiki') ? 'src-wiki' : 'src-tpl'}" style="margin-bottom:8px">${source}</div>` +
+    content.substring(0, 400) + (content.length > 400 ? '...' : '');
+  el.classList.add('show');
+  document.getElementById('fillBtn').style.display = 'inline-flex';
+  showToast('✅ Đã tạo nội dung! Nhấn "Dùng nội dung này" để điền vào kịch bản.');
+}
+
+function fillScript() {
+  if (!generatedContent) return;
+  // Switch to manual tab and fill
+  const manualTab = document.querySelector('.ptab');
+  switchTab('manual', manualTab);
+  document.getElementById('scriptInput').value = generatedContent;
+  // Auto-set title if empty
+  const firstLine = generatedContent.split('\n')[0];
+  if (!document.getElementById('titleInput').value && firstLine) {
+    document.getElementById('titleInput').value = firstLine.substring(0, 60);
+  }
+  // Auto-set unsplash keyword
+  const topic = document.getElementById('autoTopic').value.trim();
+  if (!document.getElementById('unsplashKeyword').value && topic) {
+    document.getElementById('unsplashKeyword').value = topic;
+  }
+  showToast('✅ Đã điền kịch bản! Nhấn "Tạo Video" để render.');
+  // Scroll to generate button
+  document.getElementById('generateBtn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Init suggest chips on load
+document.addEventListener('DOMContentLoaded', renderSuggestChips);
 
 // ══════════════════════════════════════════════════════════
 // INIT – idle canvas
