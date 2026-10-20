@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Video Creator Pro – Tạo Video TikTok/Reels Miễn Phí</title>
+  <meta name="description" content="Tạo video TikTok, Reels, YouTube Shorts miễn phí với hiệu ứng chuyển cảnh đẹp, ảnh nền tự động, nhạc nền lo-fi." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;900&family=Playfair+Display:wght@700;900&family=Righteous&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080810;
+      --bg2: #0f0f1e;
+      --card: #13132a;
+      --card2: #1a1a35;
+      --a1: #7c3aed;
+      --a2: #06b6d4;
+      --a3: #f59e0b;
+      --grad: linear-gradient(135deg,#7c3aed,#06b6d4);
+      --text: #f1f5f9;
+      --sub: #94a3b8;
+      --muted: #475569;
+      --border: rgba(255,255,255,0.07);
+      --ba: rgba(124,58,237,0.35);
+      --r: 16px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+    /* BG orbs */
+    .orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+    .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.12;animation:orb 22s ease-in-out infinite}
+    .o1{width:700px;height:700px;background:#7c3aed;top:-250px;left:-250px}
+    .o2{width:550px;height:550px;background:#06b6d4;bottom:-200px;right:-200px;animation-delay:-8s}
+    .o3{width:450px;height:450px;background:#f59e0b;top:45%;left:45%;animation-delay:-16s;opacity:.06}
+    @keyframes orb{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-50px) scale(1.07)}66%{transform:translate(-30px,35px) scale(.94)}}
+
+    /* Layout */
+    .wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 20px 80px}
+
+    /* Header */
+    header{text-align:center;padding:52px 0 40px}
+    .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.35);border-radius:100px;padding:5px 16px;font-size:11px;font-weight:700;color:#a78bfa;letter-spacing:.8px;text-transform:uppercase;margin-bottom:22px}
+    .bdot{width:6px;height:6px;border-radius:50%;background:#a78bfa;animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    h1{font-family:'Outfit',sans-serif;font-size:clamp(2.2rem,5.5vw,4rem);font-weight:900;line-height:1.1;background:linear-gradient(135deg,#f1f5f9 0%,#a78bfa 45%,#22d3ee 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px}
+    header p{font-size:1rem;color:var(--sub);max-width:520px;margin:0 auto;line-height:1.7}
+
+    /* Stats */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:28px 0}
+    .stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+    .sv{font-size:1.5rem;font-weight:800;color:#a78bfa}
+    .sl{font-size:.7rem;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+
+    /* Grid */
+    .grid{display:grid;grid-template-columns:380px 1fr;gap:20px}
+    @media(max-width:960px){.grid{grid-template-columns:1fr}}
+
+    /* Card */
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:18px;transition:border-color .3s}
+    .card:hover{border-color:var(--ba)}
+    .ct{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+    .ci{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+    .cp{background:rgba(124,58,237,.2)} .cc{background:rgba(6,182,212,.2)} .ca{background:rgba(245,158,11,.2)} .cg{background:rgba(34,197,94,.2)} .cr{background:rgba(239,68,68,.2)}
+
+    /* Forms */
+    label{display:block;font-size:.82rem;font-weight:500;color:var(--sub);margin-bottom:6px}
+    textarea,input[type=text]{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.9rem;font-family:'Inter',sans-serif;outline:none;resize:vertical;transition:border-color .25s,box-shadow .25s;margin-bottom:16px}
+    textarea:focus,input:focus{border-color:var(--a1);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+    textarea{min-height:140px}
+    select{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.88rem;font-family:'Inter',sans-serif;outline:none;cursor:pointer;margin-bottom:16px;transition:border-color .25s}
+    select:focus{border-color:var(--a1)}
+    select option{background:#1a1a35}
+
+    /* Aspect ratio tabs */
+    .ratio-tabs{display:flex;gap:8px;margin-bottom:16px}
+    .ratio-tab{flex:1;padding:10px 8px;border-radius:9px;border:2px solid var(--border);background:transparent;cursor:pointer;text-align:center;color:var(--sub);font-size:.78rem;font-weight:600;transition:all .22s;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .ratio-tab:hover{border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.07);color:var(--text)}
+    .ratio-tab.active{border-color:var(--a1);background:rgba(124,58,237,.14);color:#a78bfa}
+    .ratio-icon{font-size:1.1rem}
+
+    /* Theme picker */
+    .themes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+    .tbtn{padding:10px 6px;border-radius:9px;border:2px solid var(--border);background:transparent;cursor:pointer;text-align:center;transition:all .22s;display:flex;flex-direction:column;align-items:center;gap:5px}
+    .tbtn:hover{border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.07)}
+    .tbtn.active{border-color:var(--a1);background:rgba(124,58,237,.12)}
+    .tprev{width:100%;height:36px;border-radius:5px}
+    .tbtn span{font-size:.7rem;color:var(--sub);font-weight:500}
+
+    /* Transition picker */
+    .trans-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+    .trans-btn{padding:10px;border-radius:9px;border:2px solid var(--border);background:transparent;cursor:pointer;color:var(--sub);font-size:.78rem;font-weight:600;transition:all .22s;text-align:center}
+    .trans-btn:hover{border-color:rgba(6,182,212,.5);background:rgba(6,182,212,.07);color:var(--text)}
+    .trans-btn.active{border-color:var(--a2);background:rgba(6,182,212,.12);color:#22d3ee}
+
+    /* Sliders */
+    .sr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .sr label{margin-bottom:0;min-width:110px;font-size:.8rem}
+    input[type=range]{flex:1;appearance:none;height:4px;background:var(--border);border-radius:100px;outline:none;cursor:pointer;margin-bottom:0;border:none}
+    input[type=range]::-webkit-slider-thumb{appearance:none;width:15px;height:15px;border-radius:50%;background:var(--a1);cursor:pointer;border:2px solid #fff;box-shadow:0 0 8px rgba(124,58,237,.5)}
+    .sv2{min-width:38px;text-align:right;font-size:.82rem;font-weight:700;color:#a78bfa}
+
+    /* Toggle */
+    .trow{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:12px}
+    .tlab{font-size:.83rem;color:var(--sub)}
+    .tog{position:relative;width:42px;height:23px;flex-shrink:0}
+    .tog input{opacity:0;width:0;height:0}
+    .ts{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:100px;cursor:pointer;transition:background .25s}
+    .ts::before{content:'';position:absolute;width:17px;height:17px;left:3px;bottom:3px;background:white;border-radius:50%;transition:transform .25s}
+    .tog input:checked + .ts{background:var(--a1)}
+    .tog input:checked + .ts::before{transform:translateX(19px)}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:11px;font-size:.9rem;font-weight:600;border:none;cursor:pointer;transition:all .22s;white-space:nowrap}
+    .btn-p{background:var(--grad);color:#fff;width:100%;font-size:.95rem;padding:15px;box-shadow:0 8px 24px rgba(124,58,237,.35)}
+    .btn-p:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 32px rgba(124,58,237,.5)}
+    .btn-p:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .btn-s{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text)}
+    .btn-s:hover:not(:disabled){background:rgba(255,255,255,.1)}
+    .btn-s:disabled{opacity:.35;cursor:not-allowed}
+    .btn-g{background:linear-gradient(135deg,#059669,#10b981);color:#fff;box-shadow:0 6px 20px rgba(16,185,129,.3)}
+    .btn-g:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(16,185,129,.4)}
+    .btn-r{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;box-shadow:0 6px 20px rgba(239,68,68,.3)}
+    .btn-r:hover{transform:translateY(-2px)}
+
+    /* Canvas */
+    .cw{position:relative;background:#000;border-radius:12px;overflow:hidden;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:16px;transition:all .3s}
+    .cw.ratio-16-9{aspect-ratio:16/9}
+    .cw.ratio-9-16{max-height:500px;aspect-ratio:9/16}
+    .cw.ratio-1-1{aspect-ratio:1/1}
+    #mainCanvas{width:100%;height:100%;display:block}
+
+    /* Slide progress bar */
+    .slide-progress-bar{height:4px;background:rgba(255,255,255,.08);border-radius:100px;margin-bottom:14px;overflow:hidden}
+    .slide-progress-fill{height:100%;background:var(--grad);border-radius:100px;transition:width .4s ease}
+
+    /* Progress */
+    .prog{display:none;margin-bottom:14px}
+    .prog.show{display:block}
+    .prow{display:flex;justify-content:space-between;font-size:.78rem;color:var(--sub);margin-bottom:6px}
+    .pbg{background:rgba(255,255,255,.06);border-radius:100px;height:5px;overflow:hidden}
+    .pfill{height:100%;background:var(--grad);border-radius:100px;transition:width .3s ease;width:0}
+    .pstat{font-size:.78rem;color:var(--a2);margin-top:6px;min-height:1.1em}
+
+    /* Action row */
+    .ar{display:flex;gap:8px;flex-wrap:wrap}
+    .ar .btn{flex:1;min-width:90px;font-size:.82rem;padding:10px 12px}
+
+    /* Slides list */
+    .slist{display:flex;flex-direction:column;gap:7px;max-height:250px;overflow-y:auto;padding-right:3px}
+    .slist::-webkit-scrollbar{width:3px}
+    .slist::-webkit-scrollbar-thumb{background:var(--a1);border-radius:100px}
+    .si{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:9px;border:1px solid var(--border);background:rgba(0,0,0,.2);cursor:pointer;transition:border-color .2s,background .2s}
+    .si:hover,.si.active{border-color:rgba(124,58,237,.4);background:rgba(124,58,237,.06)}
+    .sn{width:26px;height:26px;border-radius:7px;background:rgba(124,58,237,.2);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#a78bfa;flex-shrink:0}
+    .st{font-size:.78rem;color:var(--sub);line-height:1.5}
+
+    /* Music bars */
+    .music-vis{display:flex;align-items:flex-end;gap:3px;height:24px;margin-left:auto}
+    .mbar{width:4px;background:#a78bfa;border-radius:2px;animation:mbar .8s ease-in-out infinite alternate}
+    .mbar:nth-child(1){animation-delay:0s}
+    .mbar:nth-child(2){animation-delay:.15s}
+    .mbar:nth-child(3){animation-delay:.3s}
+    .mbar:nth-child(4){animation-delay:.45s}
+    @keyframes mbar{from{height:4px}to{height:22px}}
+    .music-vis.paused .mbar{animation-play-state:paused}
+
+    /* Toast */
+    .toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--card2);border:1px solid var(--ba);border-radius:12px;padding:12px 18px;font-size:.85rem;color:var(--text);box-shadow:0 20px 50px rgba(0,0,0,.5);transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);max-width:300px}
+    .toast.show{transform:translateY(0);opacity:1}
+
+    /* Spinner */
+    .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:none}
+    .spin.show{display:block}
+    @keyframes sp{to{transform:rotate(360deg)}}
+
+    /* Unsplash credit */
+    .img-credit{font-size:.65rem;color:rgba(255,255,255,.35);text-align:right;margin-top:4px}
+    .img-credit a{color:rgba(255,255,255,.5);text-decoration:none}
+
+    @media(max-width:600px){.themes{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.ratio-tabs{flex-wrap:wrap}}
+  </style>
+</head>
+<body>
+<div class="orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
+
+<div class="wrap">
+  <header>
+    <div class="badge"><span class="bdot"></span> Pro · Miễn phí · 100% trên trình duyệt</div>
+    <h1>AI Video Creator Pro ✨</h1>
+    <p>Tạo video TikTok, Reels & YouTube Shorts với hiệu ứng chuyển cảnh, ảnh nền tự động & nhạc lo-fi miễn phí.</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="sv" id="statSlides">0</div><div class="sl">Slides</div></div>
+    <div class="stat"><div class="sv" id="statDuration">0s</div><div class="sl">Thời lượng</div></div>
+    <div class="stat"><div class="sv" id="statRatio">16:9</div><div class="sl">Tỉ lệ</div></div>
+    <div class="stat"><div class="sv" id="statSize">–</div><div class="sl">Kích thước</div></div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT -->
+    <div>
+      <!-- Script -->
+      <div class="card">
+        <div class="ct"><div class="ci cp">✍️</div> Nội dung kịch bản</div>
+        <label>Chủ đề hoặc kịch bản đầy đủ:</label>
+        <textarea id="scriptInput" placeholder="Ví dụ:&#10;5 mẹo tiết kiệm tiền hiệu quả&#10;&#10;1. Lập ngân sách chi tiêu hàng tháng&#10;2. Hạn chế ăn ngoài, nấu ăn tại nhà&#10;3. Tắt các dịch vụ subscription không dùng&#10;4. Mua sắm theo danh sách&#10;5. Đầu tư tăng thu nhập"></textarea>
+        <label>Tiêu đề video (tuỳ chọn):</label>
+        <input type="text" id="titleInput" placeholder="Để trống – tự tạo từ nội dung" />
+
+        <!-- Unsplash keyword -->
+        <label>🖼️ Từ khoá ảnh nền (Unsplash):</label>
+        <input type="text" id="unsplashKeyword" placeholder="Ví dụ: money, nature, city, tech..." />
+
+        <button class="btn btn-p" id="generateBtn" onclick="generateVideo()">
+          <span id="genSpin" class="spin"></span>
+          <span id="genTxt">🎬 Tạo Video</span>
+        </button>
+      </div>
+
+      <!-- Aspect Ratio -->
+      <div class="card">
+        <div class="ct"><div class="ci cr">📱</div> Tỉ lệ khung hình</div>
+        <div class="ratio-tabs">
+          <button class="ratio-tab" data-ratio="16:9" onclick="setRatio(this)">
+            <span class="ratio-icon">🖥️</span>16:9<br><span style="font-size:.65rem;opacity:.6">YouTube</span>
+          </button>
+          <button class="ratio-tab active" data-ratio="9:16" onclick="setRatio(this)">
+            <span class="ratio-icon">📱</span>9:16<br><span style="font-size:.65rem;opacity:.6">TikTok/Reels</span>
+          </button>
+          <button class="ratio-tab" data-ratio="1:1" onclick="setRatio(this)">
+            <span class="ratio-icon">⬛</span>1:1<br><span style="font-size:.65rem;opacity:.6">Instagram</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Transitions -->
+      <div class="card">
+        <div class="ct"><div class="ci cc">✨</div> Hiệu ứng chuyển slide</div>
+        <div class="trans-grid">
+          <button class="trans-btn active" data-trans="slide" onclick="setTransition(this)">➡ Slide In</button>
+          <button class="trans-btn" data-trans="fade" onclick="setTransition(this)">🌫 Fade</button>
+          <button class="trans-btn" data-trans="zoom" onclick="setTransition(this)">🔍 Zoom In</button>
+          <button class="trans-btn" data-trans="flip" onclick="setTransition(this)">🔄 Flip</button>
+          <button class="trans-btn" data-trans="glitch" onclick="setTransition(this)">⚡ Glitch</button>
+          <button class="trans-btn" data-trans="bounce" onclick="setTransition(this)">🏀 Bounce</button>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="card">
+        <div class="ct"><div class="ci ca">⚙️</div> Cài đặt thêm</div>
+        <div class="trow">
+          <span class="tlab">🎙️ Giọng đọc tự động (TTS)</span>
+          <label class="tog"><input type="checkbox" id="voiceToggle" checked /><span class="ts"></span></label>
+        </div>
+        <div class="trow">
+          <span class="tlab">🎵 Nhạc nền lo-fi</span>
+          <label class="tog"><input type="checkbox" id="musicToggle" onchange="toggleMusic()" /><span class="ts"></span></label>
+        </div>
+        <div class="trow">
+          <span class="tlab">🖼️ Ảnh nền Unsplash</span>
+          <label class="tog"><input type="checkbox" id="bgImgToggle" checked /><span class="ts"></span></label>
+        </div>
+
+        <div class="sr">
+          <label>⏱️ Thời gian/slide</label>
+          <input type="range" id="slideDur" min="2" max="12" value="5" step="1" oninput="document.getElementById('sdv').textContent=this.value+'s'" />
+          <span class="sv2" id="sdv">5s</span>
+        </div>
+        <div class="sr">
+          <label>🔤 Cỡ chữ</label>
+          <input type="range" id="fontSize" min="20" max="64" value="38" step="2" oninput="document.getElementById('fsv').textContent=this.value+'px';if(slides.length)renderCurrentSlide(1)" />
+          <span class="sv2" id="fsv">38px</span>
+        </div>
+        <div class="sr">
+          <label>🎶 Âm lượng nhạc</label>
+          <input type="range" id="musicVol" min="0" max="100" value="30" step="5" oninput="setMusicVolume(this.value);document.getElementById('mvv').textContent=this.value+'%'" />
+          <span class="sv2" id="mvv">30%</span>
+        </div>
+
+        <label>🎨 Theme màu sắc</label>
+        <div class="themes" id="themesGrid">
+          <button class="tbtn active" data-theme="galaxy" onclick="selectTheme(this)">
+            <div class="tprev" style="background:linear-gradient(135deg,#1a0533,#0d1b4b,#0a2a4a)"></div><span>🌌 Galaxy</span>
+          </button>
+          <button class="tbtn" data-theme="sunset" onclick="selectTheme(this)">
+            <div class="tprev" style="background:linear-gradient(135deg,#7c1d3a,#c2410c,#f59e0b)"></div><span>🌅 Sunset</span>
+          </button>
+          <button class="tbtn" data-theme="forest" onclick="selectTheme(this)">
+            <div class="tprev" style="background:linear-gradient(135deg,#052e16,#065f46,#0d9488)"></div><span>🌿 Forest</span>
+          </button>
+          <button class="tbtn" data-theme="ocean" onclick="selectTheme(this)">
+            <div class="tprev" style="background:linear-gradient(135deg,#0c1445,#1e3a8a,#0891b2)"></div><span>🌊 Ocean</span>
+          </button>
+          <button class="tbtn" data-theme="neon" onclick="selectTheme(this)">
+            <div class="tprev" style="background:linear-gradient(135deg,#09090b,#18181b,#7c3aed)"></div><span>⚡ Neon</span>
+          </button>
+          <button class="tbtn" data-theme="sakura" onclick="selectTheme(this)">
+            <div class="tprev" style="background:linear-gradient(135deg,#4a0030,#9d174d,#f9a8d4)"></div><span>🌸 Sakura</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+      <!-- Preview -->
+      <div class="card">
+        <div class="ct">
+          <div class="ci ca">🎥</div> Xem trước
+          <div class="music-vis paused" id="musicVis">
+            <div class="mbar"></div><div class="mbar"></div><div class="mbar"></div><div class="mbar"></div>
+          </div>
+        </div>
+
+        <div class="cw ratio-9-16" id="canvasWrap">
+          <canvas id="mainCanvas" width="720" height="1280"></canvas>
+        </div>
+        <div class="img-credit" id="imgCredit"></div>
+
+        <!-- Slide progress bar -->
+        <div class="slide-progress-bar">
+          <div class="slide-progress-fill" id="slideProgFill" style="width:0%"></div>
+        </div>
+
+        <!-- Recording progress -->
+        <div class="prog" id="progSection">
+          <div class="prow"><span id="progLabel">Đang xử lý...</span><span id="progPct">0%</span></div>
+          <div class="pbg"><div class="pfill" id="progFill"></div></div>
+          <div class="pstat" id="progStat">Chuẩn bị...</div>
+        </div>
+
+        <div class="ar">
+          <button class="btn btn-s" id="prevBtn" onclick="changeSlide(-1)" disabled>◀</button>
+          <button class="btn btn-s" id="nextBtn" onclick="changeSlide(1)" disabled>▶</button>
+          <button class="btn btn-s" id="recordBtn" onclick="startRecording()" disabled>⏺ Ghi</button>
+          <button class="btn btn-g" id="dlBtn" onclick="downloadVideo()" disabled style="display:none">⬇ Tải xuống</button>
+        </div>
+      </div>
+
+      <!-- Slides list -->
+      <div class="card">
+        <div class="ct">
+          <div class="ci cg">📋</div> Danh sách slides
+          <span style="margin-left:auto;font-size:.72rem;color:var(--muted)" id="slideCount">0 slides</span>
+        </div>
+        <div class="slist" id="slidesList">
+          <p style="color:var(--muted);font-size:.82rem;text-align:center;padding:18px 0">Tạo video để xem danh sách slides</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Audio element for lo-fi music -->
+<audio id="bgMusic" loop>
+  <!-- Multiple free lo-fi sources as fallback -->
+  <source src="https://www.bensound.com/bensound-music/bensound-acousticbreeze.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// CONSTANTS & STATE
+// ══════════════════════════════════════════════════════════
+const THEMES = {
+  galaxy: { bg:['#0d0225','#0d1b4b','#0a2a4a'], text:'#f1f5f9', accent:'#a78bfa', accent2:'#22d3ee', p:['#a78bfa','#22d3ee','#f59e0b'], overlay:.55 },
+  sunset: { bg:['#7c1d3a','#c2410c','#92400e'], text:'#fef3c7', accent:'#fbbf24', accent2:'#fb7185', p:['#fbbf24','#fb7185','#f97316'], overlay:.5 },
+  forest: { bg:['#022c22','#064e3b','#134e4a'], text:'#d1fae5', accent:'#34d399', accent2:'#2dd4bf', p:['#34d399','#2dd4bf','#86efac'], overlay:.5 },
+  ocean:  { bg:['#0c1445','#1e3a8a','#075985'], text:'#e0f2fe', accent:'#38bdf8', accent2:'#818cf8', p:['#38bdf8','#818cf8','#34d399'], overlay:.5 },
+  neon:   { bg:['#09090b','#0f0f1a','#0d0d0d'], text:'#f4f4f5', accent:'#c084fc', accent2:'#22d3ee', p:['#c084fc','#22d3ee','#f472b6'], overlay:.65 },
+  sakura: { bg:['#4a0030','#831843','#9d174d'], text:'#fce7f3', accent:'#f9a8d4', accent2:'#fbcfe8', p:['#f9a8d4','#fde68a','#c084fc'], overlay:.5 },
+};
+
+// Free lo-fi tracks from various open sources
+const LOFI_TRACKS = [
+  'https://www.bensound.com/bensound-music/bensound-acousticbreeze.mp3',
+  'https://www.bensound.com/bensound-music/bensound-sunny.mp3',
+  'https://www.bensound.com/bensound-music/bensound-betterdays.mp3',
+];
+
+let slides = [];
+let currentSlideIndex = 0;
+let currentTheme = 'galaxy';
+let currentTransition = 'slide';
+let currentRatio = '9:16';
+let particles = [];
+let animFrame = null;
+let recordedChunks = [];
+let mediaRecorder = null;
+let videoBlob = null;
+let isRecording = false;
+let bgImages = [];  // Unsplash images per slide
+let currentBgImage = null;
+
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+const bgMusic = document.getElementById('bgMusic');
+bgMusic.volume = 0.3;
+
+// Canvas dimensions by ratio
+const RATIOS = {
+  '16:9': { w: 1280, h: 720 },
+  '9:16': { w: 720,  h: 1280 },
+  '1:1':  { w: 720,  h: 720 },
+};
+
+// ══════════════════════════════════════════════════════════
+// RATIO
+// ══════════════════════════════════════════════════════════
+function setRatio(btn) {
+  document.querySelectorAll('.ratio-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentRatio = btn.dataset.ratio;
+  const dim = RATIOS[currentRatio];
+  canvas.width = dim.w;
+  canvas.height = dim.h;
+  document.getElementById('statRatio').textContent = currentRatio;
+
+  const wrap = document.getElementById('canvasWrap');
+  wrap.className = 'cw ' + (currentRatio === '16:9' ? 'ratio-16-9' : currentRatio === '1:1' ? 'ratio-1-1' : 'ratio-9-16');
+
+  if (slides.length) renderCurrentSlide(1);
+}
+
+// ══════════════════════════════════════════════════════════
+// PARTICLES
+// ══════════════════════════════════════════════════════════
+function initParticles(theme) {
+  particles = [];
+  const n = currentRatio === '16:9' ? 60 : 80;
+  for (let i = 0; i < n; i++) {
+    particles.push({
+      x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+      r: Math.random() * 2.8 + 0.4,
+      vx: (Math.random() - .5) * .55, vy: (Math.random() - .5) * .55,
+      color: THEMES[theme].p[Math.floor(Math.random() * 3)],
+      alpha: Math.random() * .5 + .15,
+    });
+  }
+}
+
+function updateParticles() {
+  particles.forEach(p => {
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill();
+    ctx.globalAlpha = 1;
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// BACKGROUND
+// ══════════════════════════════════════════════════════════
+function drawBg(theme, bgImg) {
+  const t = THEMES[theme];
+  const W = canvas.width, H = canvas.height;
+
+  if (bgImg && document.getElementById('bgImgToggle').checked) {
+    // Draw Unsplash image with overlay
+    ctx.drawImage(bgImg, 0, 0, W, H);
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, hexToRgba(t.bg[0], t.overlay));
+    g.addColorStop(1, hexToRgba(t.bg[t.bg.length-1], t.overlay + .1));
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  } else {
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    t.bg.forEach((c, i) => g.addColorStop(i/(t.bg.length-1), c));
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16), g2 = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g2},${b},${alpha})`;
+}
+
+// ══════════════════════════════════════════════════════════
+// DRAWING
+// ══════════════════════════════════════════════════════════
+function easeOut(t) { return 1 - Math.pow(1-t, 3); }
+function easeOutBack(t) { const c1=1.70158,c3=c1+1; return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2); }
+
+function wrapText(text, x, y, maxW, lh, fs, align='left') {
+  ctx.font = `bold ${fs}px 'Inter', sans-serif`;
+  ctx.textAlign = align;
+  const words = text.split(' ');
+  let line='', lines2=[];
+  for (const w of words) {
+    const test = line + w + ' ';
+    if (ctx.measureText(test).width > maxW && line) { lines2.push(line.trim()); line = w+' '; }
+    else line = test;
+  }
+  if (line) lines2.push(line.trim());
+  const totalH = lines2.length * lh;
+  let sy = y - totalH/2 + lh/2;
+  lines2.forEach(l => { ctx.fillText(l, x, sy); sy += lh; });
+  return lines2.length;
+}
+
+function roundRect(c, x, y, w, h, r) {
+  c.beginPath();
+  c.moveTo(x+r,y); c.lineTo(x+w-r,y); c.quadraticCurveTo(x+w,y,x+w,y+r);
+  c.lineTo(x+w,y+h-r); c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  c.lineTo(x+r,y+h); c.quadraticCurveTo(x,y+h,x,y+h-r);
+  c.lineTo(x,y+r); c.quadraticCurveTo(x,y,x+r,y); c.closePath();
+}
+
+function applyTransitionTransform(progress, transition) {
+  const W = canvas.width, H = canvas.height;
+  const e = easeOut(Math.min(progress, 1));
+
+  ctx.save();
+  switch(transition) {
+    case 'slide':
+      ctx.translate((1-e) * W * 0.25, 0);
+      ctx.globalAlpha = e;
+      break;
+    case 'fade':
+      ctx.globalAlpha = e;
+      break;
+    case 'zoom':
+      const scale = 0.7 + 0.3 * e;
+      ctx.translate(W/2, H/2); ctx.scale(scale, scale); ctx.translate(-W/2, -H/2);
+      ctx.globalAlpha = e;
+      break;
+    case 'flip':
+      ctx.translate(W/2, H/2);
+      ctx.scale(e < 0.5 ? 1 - 2*e : 2*e - 1, 1);
+      ctx.translate(-W/2, -H/2);
+      ctx.globalAlpha = Math.min(e*2, 1);
+      break;
+    case 'glitch':
+      const glitchX = e < 0.5 ? (Math.random()-0.5)*30*(1-e*2) : 0;
+      ctx.translate(glitchX, 0);
+      ctx.globalAlpha = e;
+      break;
+    case 'bounce':
+      const be = easeOutBack(Math.min(progress/0.8, 1));
+      ctx.translate((1-be) * W * 0.4, 0);
+      ctx.globalAlpha = Math.min(progress/0.4, 1);
+      break;
+    default:
+      ctx.globalAlpha = e;
+  }
+}
+
+function drawSlide(slide, theme, progress, bgImg) {
+  const t = THEMES[theme];
+  const W = canvas.width, H = canvas.height;
+  const fs = parseInt(document.getElementById('fontSize').value);
+  const isPortrait = H > W;
+
+  drawBg(theme, bgImg);
+  updateParticles();
+
+  // Decorative orbs
+  ctx.save();
+  ctx.globalAlpha = 0.08;
+  ctx.beginPath(); ctx.arc(W*0.85, H*0.1, isPortrait?200:180, 0, Math.PI*2);
+  ctx.fillStyle = t.accent; ctx.fill();
+  ctx.beginPath(); ctx.arc(W*0.1, H*0.9, isPortrait?160:140, 0, Math.PI*2);
+  ctx.fillStyle = t.accent2; ctx.fill();
+  ctx.restore();
+
+  // Apply transition
+  applyTransitionTransform(progress, currentTransition);
+
+  const pad = isPortrait ? Math.round(W * 0.08) : Math.round(W * 0.07);
+  const lh = fs * (isPortrait ? 1.55 : 1.45);
+
+  if (slide.type === 'title' || slide.type === 'end') {
+    // Accent top bar
+    const ag = ctx.createLinearGradient(0, 0, W, 0);
+    ag.addColorStop(0, t.accent); ag.addColorStop(1, t.accent2);
+
+    const barW = isPortrait ? W*0.4 : 130;
+    ctx.fillStyle = ag;
+    roundRect(ctx, W/2 - barW/2, H * (isPortrait?0.28:0.26), barW, 5, 3); ctx.fill();
+
+    ctx.fillStyle = t.text;
+    ctx.shadowColor = t.accent; ctx.shadowBlur = 32;
+    wrapText(slide.text, W/2, H/2 - (isPortrait?15:10), W*0.8, lh, isPortrait?fs+4:fs, 'center');
+    ctx.shadowBlur = 0;
+
+    if (slide.sub) {
+      ctx.font = `400 ${isPortrait?20:18}px 'Inter', sans-serif`;
+      ctx.fillStyle = t.accent2; ctx.textAlign = 'center';
+      ctx.fillText(slide.sub, W/2, H/2 + (isPortrait?90:60));
+    }
+
+    ctx.fillStyle = ag;
+    roundRect(ctx, W/2 - barW/2, H*(isPortrait?0.65:0.63), barW, 5, 3); ctx.fill();
+  } else {
+    // Content slide
+    const stripH = H * 0.55;
+    const sg = ctx.createLinearGradient(0, H*0.22, 0, H*0.22+stripH);
+    sg.addColorStop(0, t.accent); sg.addColorStop(1, t.accent2);
+    ctx.fillStyle = sg;
+    roundRect(ctx, pad - (isPortrait?20:25), H*0.22, 6, stripH, 3); ctx.fill();
+
+    ctx.textAlign = 'left';
+    ctx.fillStyle = t.text;
+    ctx.shadowColor = t.accent; ctx.shadowBlur = 20;
+    wrapText(slide.text, pad + (isPortrait?22:28), H/2, W - pad*2 - (isPortrait?22:28), lh, fs, 'left');
+    ctx.shadowBlur = 0;
+
+    // Slide number badge
+    const badgeX = W - pad;
+    const badgeY = H * 0.88;
+    ctx.fillStyle = t.accent;
+    ctx.globalAlpha = 0.15;
+    roundRect(ctx, badgeX - 72, badgeY - 18, 72, 32, 8); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.font = `600 13px 'Inter', sans-serif`;
+    ctx.fillStyle = t.accent;
+    ctx.textAlign = 'right';
+    ctx.fillText(`${currentSlideIndex+1} / ${slides.length}`, badgeX - 8, badgeY + 5);
+  }
+
+  ctx.restore(); // end transition transform
+}
+
+// ══════════════════════════════════════════════════════════
+// UNSPLASH
+// ══════════════════════════════════════════════════════════
+async function fetchUnsplashImage(query) {
+  const kw = query || 'abstract colorful gradient';
+  // Unsplash Source API – free, no key needed
+  const w = canvas.width, h = canvas.height;
+  return new Promise(resolve => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    const seed = Math.floor(Math.random() * 1000);
+    img.src = `https://source.unsplash.com/${w}x${h}/?${encodeURIComponent(kw)}&sig=${seed}`;
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    setTimeout(() => resolve(null), 6000);
+  });
+}
+
+async function loadBgImages() {
+  const kw = document.getElementById('unsplashKeyword').value.trim() || 'abstract';
+  const useImg = document.getElementById('bgImgToggle').checked;
+  if (!useImg) { bgImages = new Array(slides.length).fill(null); return; }
+
+  bgImages = [];
+  for (let i = 0; i < slides.length; i++) {
+    setProgress(Math.round(20 + (i/slides.length)*30), `🖼️ Tải ảnh nền slide ${i+1}/${slides.length}...`);
+    const img = await fetchUnsplashImage(kw);
+    bgImages.push(img);
+    await sleep(300); // avoid rate limit
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SCRIPT PARSER
+// ══════════════════════════════════════════════════════════
+function parseScript(raw, title) {
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+  const result = [];
+  const vTitle = title || lines[0] || 'Video';
+  result.push({ type:'title', text: vTitle, sub:'Được tạo bởi AI Video Creator Pro' });
+  let cur = [];
+  const MAX = 18;
+  function flush() { if(cur.length){result.push({type:'content',text:cur.join(' ')});cur=[];} }
+  for (const line of lines.slice(title?0:1)) {
+    if (/^(\d+[\.\)]\s|[-•*]\s)/.test(line)) { flush(); cur.push(line.replace(/^(\d+[\.\)]\s|[-•*]\s)/,'').trim()); }
+    else { const wc=[...cur,line].join(' ').split(' ').length; if(wc>MAX) flush(); cur.push(line); }
+    if(cur.join(' ').split(' ').length>=MAX) flush();
+  }
+  flush();
+  result.push({ type:'end', text:'🙏 Cảm ơn đã xem!', sub: vTitle });
+  return result;
+}
+
+// ══════════════════════════════════════════════════════════
+// GENERATE
+// ══════════════════════════════════════════════════════════
+async function generateVideo() {
+  const script = document.getElementById('scriptInput').value.trim();
+  if (!script) { showToast('⚠️ Hãy nhập nội dung video!'); return; }
+
+  setBtnLoading(true);
+  showProg(true);
+  setProgress(5, 'Phân tích kịch bản...');
+  videoBlob = null;
+
+  const title = document.getElementById('titleInput').value.trim();
+  slides = parseScript(script, title);
+  initParticles(currentTheme);
+  currentSlideIndex = 0;
+
+  const dur = parseInt(document.getElementById('slideDur').value);
+  document.getElementById('statSlides').textContent = slides.length;
+  document.getElementById('statDuration').textContent = (slides.length * dur) + 's';
+  document.getElementById('statSize').textContent = '–';
+
+  setProgress(15, 'Tải ảnh nền Unsplash...');
+  await loadBgImages();
+
+  setProgress(60, 'Tạo danh sách slides...');
+  await sleep(150);
+  renderSlideList();
+  document.getElementById('slideCount').textContent = slides.length + ' slides';
+
+  setProgress(90, 'Render slide đầu tiên...');
+  await sleep(100);
+  previewSlide(0);
+
+  setProgress(100, '✅ Xong! Nhấn ⏺ Ghi để xuất file.');
+  setBtnLoading(false);
+  document.getElementById('prevBtn').disabled = false;
+  document.getElementById('nextBtn').disabled = false;
+  document.getElementById('recordBtn').disabled = false;
+  document.getElementById('dlBtn').style.display = 'none';
+
+  showToast('✅ Tạo ' + slides.length + ' slides thành công!');
+}
+
+// ══════════════════════════════════════════════════════════
+// PREVIEW
+// ══════════════════════════════════════════════════════════
+function previewSlide(idx) {
+  if (!slides.length) return;
+  idx = Math.max(0, Math.min(idx, slides.length-1));
+  currentSlideIndex = idx;
+  highlightSlide(idx);
+  updateSlideProgressBar();
+
+  currentBgImage = bgImages[idx] || null;
+  updateImgCredit(currentBgImage);
+
+  if (animFrame) cancelAnimationFrame(animFrame);
+  const start = performance.now();
+  const ADUR = 700;
+
+  function frame(ts) {
+    const prog = Math.min((ts - start) / ADUR, 1);
+    drawSlide(slides[idx], currentTheme, prog, currentBgImage);
+    animFrame = requestAnimationFrame(frame);
+  }
+  animFrame = requestAnimationFrame(frame);
+}
+
+function renderCurrentSlide(p) {
+  if (!slides.length) return;
+  drawSlide(slides[currentSlideIndex], currentTheme, p, currentBgImage);
+}
+
+function changeSlide(dir) {
+  previewSlide(currentSlideIndex + dir);
+}
+
+function updateSlideProgressBar() {
+  if (!slides.length) return;
+  const pct = ((currentSlideIndex + 1) / slides.length) * 100;
+  document.getElementById('slideProgFill').style.width = pct + '%';
+}
+
+function updateImgCredit(img) {
+  const el = document.getElementById('imgCredit');
+  el.innerHTML = img ? 'Photo: <a href="https://unsplash.com" target="_blank">Unsplash</a>' : '';
+}
+
+// ══════════════════════════════════════════════════════════
+// MUSIC
+// ══════════════════════════════════════════════════════════
+function toggleMusic() {
+  const on = document.getElementById('musicToggle').checked;
+  if (on) {
+    const track = LOFI_TRACKS[Math.floor(Math.random() * LOFI_TRACKS.length)];
+    bgMusic.src = track;
+    bgMusic.play().catch(() => showToast('⚠️ Trình duyệt chặn tự động phát nhạc. Nhấn Ghi video để thử lại.'));
+    document.getElementById('musicVis').classList.remove('paused');
+  } else {
+    bgMusic.pause();
+    document.getElementById('musicVis').classList.add('paused');
+  }
+}
+
+function setMusicVolume(v) {
+  bgMusic.volume = v / 100;
+}
+
+// ══════════════════════════════════════════════════════════
+// RECORDING
+// ══════════════════════════════════════════════════════════
+async function startRecording() {
+  if (!slides.length || isRecording) return;
+  isRecording = true;
+  videoBlob = null;
+  recordedChunks = [];
+
+  document.getElementById('recordBtn').disabled = true;
+  document.getElementById('dlBtn').style.display = 'none';
+
+  // Start music
+  if (document.getElementById('musicToggle').checked) {
+    const track = LOFI_TRACKS[Math.floor(Math.random() * LOFI_TRACKS.length)];
+    bgMusic.src = track;
+    await bgMusic.play().catch(()=>{});
+  }
+
+  const stream = canvas.captureStream(30);
+  const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+  mediaRecorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 5_000_000 });
+  mediaRecorder.ondataavailable = e => { if (e.data.size>0) recordedChunks.push(e.data); };
+  mediaRecorder.onstop = finishRecording;
+  mediaRecorder.start(100);
+
+  showProg(true);
+  const durMs = parseInt(document.getElementById('slideDur').value) * 1000;
+  const useVoice = document.getElementById('voiceToggle').checked;
+
+  for (let i = 0; i < slides.length; i++) {
+    currentSlideIndex = i;
+    currentBgImage = bgImages[i] || null;
+    highlightSlide(i);
+    updateSlideProgressBar();
+    setProgress(Math.round((i/slides.length)*88), `🎬 Ghi slide ${i+1}/${slides.length}...`);
+    if (useVoice && window.speechSynthesis) speak(slides[i].text);
+    await animateSlide(slides[i], durMs, currentBgImage);
+  }
+
+  setProgress(95, 'Hoàn thiện...');
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  bgMusic.pause();
+  document.getElementById('musicVis').classList.add('paused');
+  await sleep(700);
+  mediaRecorder.stop();
+}
+
+function animateSlide(slide, durMs, bgImg) {
+  return new Promise(resolve => {
+    if (animFrame) cancelAnimationFrame(animFrame);
+    const start = performance.now();
+    function frame(ts) {
+      const elapsed = ts - start;
+      drawSlide(slide, currentTheme, Math.min(elapsed/700, 1), bgImg);
+      if (elapsed < durMs) animFrame = requestAnimationFrame(frame);
+      else resolve();
+    }
+    animFrame = requestAnimationFrame(frame);
+  });
+}
+
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'vi-VN'; u.rate = 0.88; u.pitch = 1;
+  const vi = speechSynthesis.getVoices().find(v => v.lang.startsWith('vi'));
+  if (vi) u.voice = vi;
+  speechSynthesis.speak(u);
+}
+
+function finishRecording() {
+  isRecording = false;
+  videoBlob = new Blob(recordedChunks, { type:'video/webm' });
+  const mb = (videoBlob.size/1024/1024).toFixed(1);
+  document.getElementById('statSize').textContent = mb + ' MB';
+  setProgress(100, '🎉 Ghi xong! Nhấn Tải xuống để lưu.');
+  document.getElementById('dlBtn').style.display = 'flex';
+  document.getElementById('recordBtn').disabled = false;
+  showToast('🎉 Ghi xong (' + mb + ' MB). Tải xuống ngay!');
+}
+
+function downloadVideo() {
+  if (!videoBlob) return;
+  const url = URL.createObjectURL(videoBlob);
+  const a = document.createElement('a');
+  a.href = url;
+  const t = document.getElementById('titleInput').value.trim() || 'video';
+  const ratio = currentRatio.replace(':','x');
+  a.download = `${t.replace(/\s+/g,'_')}_${ratio}_${Date.now()}.webm`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('⬇ Đang tải xuống...');
+}
+
+// ══════════════════════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════════════════════
+function renderSlideList() {
+  const list = document.getElementById('slidesList');
+  list.innerHTML = '';
+  slides.forEach((s, i) => {
+    const d = document.createElement('div');
+    d.className = 'si' + (i===0?' active':'');
+    d.id = 'si-'+i;
+    d.onclick = () => previewSlide(i);
+    const preview = s.text.length > 70 ? s.text.substring(0,70)+'...' : s.text;
+    d.innerHTML = `<div class="sn">${i+1}</div><div class="st">${preview}</div>`;
+    list.appendChild(d);
+  });
+}
+
+function highlightSlide(idx) {
+  document.querySelectorAll('.si').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById('si-'+idx);
+  if (el) { el.classList.add('active'); el.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+}
+
+function selectTheme(btn) {
+  document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTheme = btn.dataset.theme;
+  initParticles(currentTheme);
+  if (slides.length) previewSlide(currentSlideIndex);
+}
+
+function setTransition(btn) {
+  document.querySelectorAll('.trans-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTransition = btn.dataset.trans;
+  if (slides.length) previewSlide(currentSlideIndex);
+}
+
+function setProgress(pct, label) {
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progPct').textContent = pct+'%';
+  document.getElementById('progStat').textContent = label;
+}
+function showProg(show) { document.getElementById('progSection').classList.toggle('show', show); }
+function setBtnLoading(on) {
+  document.getElementById('generateBtn').disabled = on;
+  document.getElementById('genSpin').classList.toggle('show', on);
+  document.getElementById('genTxt').textContent = on ? 'Đang xử lý...' : '🎬 Tạo Video';
+}
+
+let toastT = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  if (toastT) clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r,ms)); }
+
+// ══════════════════════════════════════════════════════════
+// INIT – idle canvas
+// ══════════════════════════════════════════════════════════
+// Set default ratio to 9:16
+setRatio(document.querySelector('.ratio-tab.active'));
+initParticles('galaxy');
+
+(function idle() {
+  if (!slides.length) {
+    drawBg('galaxy', null);
+    updateParticles();
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(167,139,250,0.35)';
+    ctx.font = `bold ${canvas.width > 800 ? 24 : 20}px 'Inter', sans-serif`;
+    ctx.fillText('Nhập nội dung và nhấn "Tạo Video" ✨', canvas.width/2, canvas.height/2);
+    ctx.restore();
+  }
+  requestAnimationFrame(idle);
+})();
+</script>
+</body>
+</html>
